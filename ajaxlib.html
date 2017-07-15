@@ -1,0 +1,86 @@
+<script>
+var server= "http://127.0.0.1:3000/";
+
+function routesLoaded() { // This function is called whenever a listRoutes is requested and response has arrived
+	//
+	// CODE GOES HERE ..................................
+	//
+}
+function pathLoaded() { // This function is called whenever a findPath is requested and response has arrived
+	//
+	// CODE GOES HERE ..................................
+	//
+}
+
+
+var routeId= undefined;
+var routes= undefined;
+var path= undefined;
+
+
+function addRoute(from, to, price) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    	routeId = int(this.responseText);
+    }
+  };
+  txt= "addRoute?from="+from+"&to="+to+"&price="+price;
+  xhttp.open("GET", server+txt, true);
+  xhttp.send();
+}
+
+function removeRoute() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    	routeId = undefined;
+    }
+  };
+  txt= "removeRoute?id="+routeId;
+  xhttp.open("GET", server+txt, true);
+  xhttp.send();
+}
+
+function listRoutes() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    	routes = JSON.parse(this.responseText);
+    	routesLoaded();
+    }
+  };
+  txt= "listRoutes";
+  xhttp.open("GET", server+txt, true);
+  xhttp.send();
+}
+
+function findPath(to) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    	path = JSON.parse(this.responseText);
+    	pathLoaded();
+    }
+  };
+  txt= "findPath?to=" + to;
+  xhttp.open("GET", server+txt, true);
+  xhttp.send();
+}
+
+
+function updateSystem() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    }
+  };
+  txt= "updateSystem";
+  xhttp.open("GET", server+txt, true);
+  xhttp.send();
+  setTimeout(updateSystem, 250);
+}
+updateSystem()
+
+
+</script>

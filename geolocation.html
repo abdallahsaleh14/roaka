@@ -1,0 +1,62 @@
+<canvas id="canvas" width="520" height="681" style="border:1px solid #d3d3d3;">
+
+<script>
+var server= "http://127.0.0.1:3000/";
+
+////////// IMPORTANT:: import this file after ajaxlib
+
+
+var canvas = document.getElementById("canvas"),
+    ctx = canvas.getContext("2d");
+
+canvas.width = 520;
+canvas.height = 681;
+
+
+var _background = new Image();
+_background.src = "media/map.gif";
+
+
+_background.onload = function () {
+	ctx.drawImage(_background,0,0);
+
+	// draw_path('{"length": 207.1376783840174, "cost": 11, "names": ["Haifa", "Nablus", "Jaffa", "Ramla", "Beir Sabea"], "ids": [0, 2, 5, 6, 10]}','[{"src": 1, "dst": 3, "acor": {"y": 92, "x": 115}, "id": 2, "bcor": {"y": 141, "x": 142}}, {"src": 2, "dst": 4, "acor": {"y": 111, "x": 135}, "id": 4, "bcor": {"y": 130, "x": 108}}, {"src": 2, "dst": 5, "acor": {"y": 111, "x": 135}, "id": 7, "bcor": {"y": 165, "x": 131}}, {"src": 3, "dst": 6, "acor": {"y": 141, "x": 142}, "id": 6, "bcor": {"y": 143, "x": 94}}, {"src": 4, "dst": 3, "acor": {"y": 130, "x": 108}, "id": 5, "bcor": {"y": 141, "x": 142}}, {"src": 5, "dst": 4, "acor": {"y": 165, "x": 131}, "id": 8, "bcor": {"y": 130, "x": 108}}, {"src": 6, "dst": 7, "acor": {"y": 143, "x": 94}, "id": 9, "bcor": {"y": 173, "x": 97}}, {"src": 7, "dst": 8, "acor": {"y": 173, "x": 97}, "id": 10, "bcor": {"y": 187, "x": 136}}, {"src": 7, "dst": 10, "acor": {"y": 173, "x": 97}, "id": 11, "bcor": {"y": 214, "x": 117}}, {"src": 7, "dst": 11, "acor": {"y": 173, "x": 97}, "id": 12, "bcor": {"y": 246, "x": 97}}, {"src": 7, "dst": 9, "acor": {"y": 173, "x": 97}, "id": 14, "bcor": {"y": 197, "x": 78}}]');
+
+}
+function draw_routes(routes_json){
+	routes = JSON.parse(routes_json);
+	for(var i =0; i<routes.length; i++){
+		draw_line(routes[i]);
+	}
+}
+function draw_path(path_json, routes_json){
+	routes = JSON.parse(routes_json);
+	path_ids = JSON.parse(path_json).ids;
+	for(var i =0; i<path_ids.length-1; i++){
+		for(var a=0; a<routes.length; a++){
+			if((routes[a].src === path_ids[i]+1) && (routes[a].dst === path_ids[i+1]+1)) {
+				draw_line(routes[a]);
+			}
+		}
+	}
+}
+
+function trans(num) {
+	return num * 2.5;
+}
+
+function draw_line(route) {
+	ctx.beginPath();
+	ctx.moveTo(trans(route.acor.x), trans(route.acor.y));
+	ctx.lineTo(trans(route.bcor.x), trans(route.bcor.y));
+	ctx.moveTo(trans(route.acor.x), trans(route.acor.y+1));
+	ctx.lineTo(trans(route.bcor.x), trans(route.bcor.y));
+	ctx.moveTo(trans(route.acor.x), trans(route.acor.y-1));
+	ctx.lineTo(trans(route.bcor.x), trans(route.bcor.y));
+	ctx.moveTo(trans(route.acor.x+1), trans(route.acor.y));
+	ctx.lineTo(trans(route.bcor.x), trans(route.bcor.y));
+	ctx.moveTo(trans(route.acor.x-1), trans(route.acor.y));
+	ctx.lineTo(trans(route.bcor.x), trans(route.bcor.y));
+	ctx.stroke();
+}
+</script>
